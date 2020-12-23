@@ -60,7 +60,6 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     private void attemptToBindService() {
-
         Intent intent = new Intent(this, RemoteService.class);
         intent.setAction("com.calmcenter.ipc.server");
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -70,11 +69,11 @@ public class ClientActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             isConnection = true;
+            // 获取 BookManager，如果不在一个进程那就返回 Proxy
             bookManager = Stub.asInterface(service);
             if (bookManager != null) {
                 try {
                     List<Book> books = bookManager.getBooks();
-                    Log.d("ClientActivity2", books.toString());
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
